@@ -14,7 +14,7 @@ public class Main {
     private static HashMap<String, Double> quadgramsLog = new HashMap<>();
 
     /**
-     *  "Load quadgrams" menu
+     * Handles "Load 4grams" menu
      */
     private static void loadQuadgramsMenu() {
         try {
@@ -23,7 +23,7 @@ public class Main {
             }
 
             // Prompt user
-            System.out.println("Please select the path to load quadgrams from:");
+            System.out.println("Please select the path to load 4grams from:");
             String inputPath = scanner.nextLine();
 
             // Open the file for reading
@@ -52,7 +52,7 @@ public class Main {
             fileScanner.close();
 
             // Report success
-            System.out.format("4grams file successfully imported (%d 4rams)%n", quadgramsLog.size());
+            System.out.format("4grams file successfully imported (%d 4grams)%n", quadgramsLog.size());
         } catch (Exception e) {
             // Handle file reading exception
             System.out.println("Can't open the 4grams file: " + e.getMessage());
@@ -105,6 +105,9 @@ public class Main {
         try {
             // Decipher text
             Decoder decoder = new Decoder(quadgramsLog, cipheredText);
+            decoder.setIterationsCount(10000);
+            decoder.setStartTemp(50);
+            decoder.setTempDecrease(0.5);
             decoder.decipherText();
 
 
@@ -112,7 +115,7 @@ public class Main {
             FileWriter fileWriter = new FileWriter(outputPath);
             fileWriter.write(decoder.getResultText());
             fileWriter.close();
-            System.out.format("Found key %s with log10(P) = %f%n", new String(decoder.getResultKey()), decoder.getResultScore());
+            System.out.format("Found key %s with log10(P) = %f%n", decoder.getResultKey(), decoder.getResultScore());
         } catch (Exception e) {
             // Handle file writing exception
             System.out.println("Failed to write deciphered text to file: " + e.getMessage());
@@ -128,7 +131,7 @@ public class Main {
         int inputChoice;
         do {
             System.out.println("Please choose an operation:");
-            System.out.println("1. Load an quadgrams file.");
+            System.out.println("1. Load a 4grams file.");
             System.out.println("2. Decipher the text.");
             System.out.println("3. Quit.");
             try
@@ -155,6 +158,7 @@ public class Main {
                     break;
             }
         } while (inputChoice != 3);
+        System.out.println("Goodbye!");
 
     }
 }
